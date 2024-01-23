@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation</title>
+    
+</head>
+<body>
+    <h1>Movie Recommendation</h1>
+    <form id="recommendationForm">
+        <label for="movie_title">Enter Movie Title:</label>
+        <input type="text" id="movie_title" required>
+        <button type="button" onclick="getRecommendations()">Get Recommendations</button>
+    </form>
+
+    <h2>Recommendations:</h2>
+    <ul id="recommendationsList"></ul>
+
+    <script>
+        function getRecommendations() {
+            var movieTitle = document.getElementById('movie_title').value;
+        
+            // Make a request to your Flask API endpoint
+            fetch(`http://127.0.0.1:5000/api/recommend/${encodeURIComponent(movieTitle)}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayRecommendations(data.recommendations);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        
+        function displayRecommendations(recommendations) {
+            var recommendationsList = document.getElementById('recommendationsList');
+            recommendationsList.innerHTML = '';
+        
+            recommendations.forEach(function(movie) {
+                var listItem = document.createElement('li');
+                listItem.textContent = movie;
+                recommendationsList.appendChild(listItem);
+            });
+        }
+        
+    </script>
+
+</body>
+</html>
